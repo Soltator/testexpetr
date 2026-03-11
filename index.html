@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>MOTOTRBO — НАСТУПНИЙ РІВЕНЬ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><path d="M0 0 L300 0 L300 300 L0 300 Z" fill="%23f5f0e6"/><path d="M60 120 Q90 60, 120 120 L135 90 Q150 45, 165 90 L180 120 Q210 60, 240 120 L255 75 Q270 30, 285 90 L292 120" stroke="%239b8875" fill="none" stroke-width="4" opacity="0.25"/><circle cx="75" cy="225" r="30" fill="%239b8875" opacity="0.15"/><circle cx="255" cy="180" r="45" fill="%239b8875" opacity="0.1"/><path d="M30 270 Q75 220, 120 270 Q165 220, 210 270 Q255 220, 280 270" stroke="%239b8875" fill="none" stroke-width="5" opacity="0.25"/><path d="M45 60 Q67 30, 90 60" stroke="%239b8875" fill="none" stroke-width="3" opacity="0.25"/></svg>') repeat;
+            background-color: #f5f0e6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #2c3e4f;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, rgba(245, 240, 230, 0.4) 0%, rgba(235, 225, 212, 0.4) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .test-wrapper {
+            max-width: 1000px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .test-card {
+            background: rgba(255, 251, 245, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 64px;
+            box-shadow: 0 40px 70px -20px rgba(70, 50, 30, 0.5);
+            padding: 45px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4a5f72, #2f4459);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .sub {
+            font-size: 1.1rem;
+            color: #6f8398;
+            margin-bottom: 30px;
+            border-left: 5px solid #bfaa92;
+            padding-left: 18px;
+            font-weight: 450;
+        }
+
+        .progress-track {
+            background: #e2d9cf;
+            height: 10px;
+            border-radius: 30px;
+            margin: 15px 0 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #8b7a64, #b8a48c, #d4c5b2);
+            height: 100%;
+            width: 0%;
+            border-radius: 30px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 48px;
+            padding: 38px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(130, 100, 80, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #2c3f52;
+            line-height: 1.4;
+            margin-bottom: 35px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .option {
+            background: #ffffff;
+            border: 2px solid #e0d5c7;
+            border-radius: 60px;
+            padding: 18px 28px;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.25s;
+            color: #2c3e4f;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .option:hover {
+            background: #fcf7f0;
+            border-color: #b8a48c;
+            transform: translateX(8px);
+            box-shadow: 0 8px 20px rgba(150, 120, 90, 0.15);
+        }
+
+        .option.selected {
+            background: #efe5d9;
+            border-color: #8b7a64;
+            box-shadow: inset 0 2px 10px rgba(150, 120, 90, 0.2), 0 8px 20px rgba(150, 120, 90, 0.15);
+        }
+
+        .opt-letter {
+            width: 48px;
+            height: 48px;
+            background: #d9cdbf;
+            color: #2c3e4f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-right: 22px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .selected .opt-letter {
+            background: #8b7a64;
+            color: white;
+        }
+
+        .badge-multi {
+            background: #b8a48c;
+            color: #2c3e4f;
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 40px;
+            margin-left: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-hard {
+            background: #c44f4f;
+            color: white;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            margin-left: 18px;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0 15px;
+        }
+
+        .btn {
+            background: #ffffff;
+            border: 2px solid #d9cfc0;
+            padding: 16px 30px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a5b69;
+            cursor: pointer;
+            transition: 0.25s;
+            flex: 1 1 auto;
+            min-width: 140px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary {
+            background: #e0d4c4;
+            border-color: #b8a28a;
+            color: #2f3e4e;
+        }
+
+        .btn-primary:hover {
+            background: #d2c4b2;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(150, 120, 90, 0.3);
+        }
+
+        .btn:hover {
+            background: #f5ede4;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .counter {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 1.2rem;
+            color: #7e8e9c;
+            font-weight: 500;
+        }
+
+        .forest-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #9b8875;
+            font-style: italic;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 60px;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .score-large {
+            font-size: 7rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4a5f72, #2f4459);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+
+        .score-percent {
+            font-size: 3rem;
+            font-weight: 400;
+            color: #6a7e92;
+            margin: 20px 0 25px;
+        }
+
+        .message {
+            font-size: 1.8rem;
+            color: #4a5f71;
+            margin-bottom: 40px;
+            font-weight: 450;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 60px;
+            padding: 45px 40px;
+        }
+
+        .review-title {
+            font-size: 2.4rem;
+            font-weight: 500;
+            color: #2c3e4f;
+            margin-bottom: 35px;
+        }
+
+        .review-item {
+            background: #ffffff;
+            border-radius: 36px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-left: 10px solid;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .review-item.correct {
+            border-left-color: #88a98b;
+        }
+
+        .review-item.incorrect {
+            border-left-color: #d6a39c;
+        }
+
+        .review-q {
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 6px 12px 6px 0;
+        }
+
+        .badge-correct {
+            background: #d4e3d2;
+            color: #1f5530;
+        }
+
+        .badge-wrong {
+            background: #f3dedb;
+            color: #9b4b43;
+        }
+
+        .explain {
+            background: #fcf9f5;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 18px;
+            border-left: 6px solid #bfaa92;
+            font-style: italic;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .hard-tag {
+            display: inline-block;
+            background: #c44f4f;
+            color: white;
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 30px;
+            margin-left: 12px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+        .mt-4 { margin-top: 30px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+    <div class="test-wrapper" id="app">
+        <div v-if="!finished" class="test-card">
+            <h1>🌲 MOTOTRBO • НАСТУПНИЙ РІВЕНЬ</h1>
+            <div class="sub">55 надскладних питань · реальні ситуації · логічні пастки</div>
+            
+            <div class="progress-track">
+                <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text">{{ current.text }} <span v-if="current.hard" class="hard-tag">складне</span></div>
+                <div class="options">
+                    <div v-for="(opt, idx) in current.options" :key="idx"
+                         class="option" :class="{ selected: isSelected(idx) }"
+                         @click="toggle(idx)">
+                        <span class="opt-letter">{{ letters[idx] }}</span>
+                        <span>{{ opt }}</span>
+                        <span v-if="current.multi" class="badge-multi">✱ можна обрати кілька</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn" @click="prev" :disabled="currentIdx === 0">← Назад</button>
+                <button v-if="!isLast" class="btn btn-primary" @click="next" :disabled="!hasSelection">Далі →</button>
+                <button v-else class="btn btn-primary" @click="finish" :disabled="!hasSelection">Завершити</button>
+                <button class="btn" @click="reset">Спочатку</button>
+            </div>
+
+            <div class="counter">{{ currentIdx + 1 }} / {{ total }}</div>
+            <div class="forest-note">🌿 лісова академія · рівень майстер</div>
+        </div>
+
+        <div v-else>
+            <div v-if="!showReview" class="test-card result-card">
+                <div class="score-large">{{ score }}/{{ total }}</div>
+                <div class="score-percent">{{ scorePercent }}%</div>
+                <div class="message">
+                    <span v-if="scorePercent >= 85">🏆 Грандмайстер!</span>
+                    <span v-else-if="scorePercent >= 70">📻 Експерт</span>
+                    <span v-else-if="scorePercent >= 55">🔧 Спеціаліст</span>
+                    <span v-else>📚 Академія чекає</span>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" @click="showReview = true">📋 Детальний розбір</button>
+                    <button class="btn" @click="reset">⟲ Заново</button>
+                </div>
+            </div>
+
+            <div v-else class="test-card review-card">
+                <h2 class="review-title">📋 Розбір польових ситуацій</h2>
+                <div v-for="(q, idx) in questions" :key="idx" 
+                     class="review-item" :class="{ correct: isAnswerCorrect(idx), incorrect: !isAnswerCorrect(idx) }">
+                    <div class="review-q">{{ idx+1 }}. {{ q.text }} <span v-if="q.hard" class="hard-tag">складне</span></div>
+                    <div>
+                        <span class="badge" :class="isAnswerCorrect(idx) ? 'badge-correct' : 'badge-wrong'">
+                            Ваша відповідь: {{ formatUserAnswer(idx) }}
+                        </span>
+                        <span v-if="!isAnswerCorrect(idx)" class="badge badge-correct">
+                            ✅ Правильно: {{ formatCorrectAnswer(q) }}
+                        </span>
+                    </div>
+                    <div class="explain" v-html="q.explanation"></div>
+                    <div v-if="q.tip" style="margin-top: 15px; color: #8b7a64; font-weight: 500;">💡 Порада: {{ q.tip }}</div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" @click="reset">⟲ Пройти знову</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                currentIdx: 0,
+                selected: [],
+                answers: [],
+                finished: false,
+                showReview: false,
+                letters: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+                questions: [
+                    // РІВЕНЬ 1: ЕКСПЕРТНІ ПИТАННЯ
+                    {
+                        text: "Ви програмуєте радіостанції для роботи через ретранслятор. В одній радіостанції колірний код = 3, в іншій = 5. Як це вплине на зв'язок?",
+                        options: [
+                            "Зв'язок буде, але з шумом",
+                            "Радіостанції не зареєструються на ретрансляторі",
+                            "Зв'язок буде, але без шифрування",
+                            "Зменшиться дальність"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Колірний код має бути однаковим для всіх пристроїв в мережі. Якщо різний — радіостанція не зареєструється на ретрансляторі.",
+                        tip: "Колірний код — це цифровий ідентифікатор, аналог тону в аналогових системах."
+                    },
+                    {
+                        text: "Під час роботи через ретранслятор ви помітили, що індикатор блимає подвійним зеленим, але звуку немає. При цьому вас чують. В чому причина?",
+                        options: [
+                            "Не співпадає ключ шифрування",
+                            "Не співпадає ID ключа шифрування",
+                            "Не співпадає колірний код",
+                            "Не співпадає частота прийому"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Якщо не співпадає ID ключа — звуку немає, але передача проходить. Якщо не співпадає сам ключ — вас би не чули."
+                    },
+                    {
+                        text: "У вас є дві радіостанції. Вони працюють на однакових частотах, з однаковим колірним кодом, але одна чує іншу з нерозбірливим звуком. Що найімовірніше?",
+                        options: [
+                            "Різні ключі шифрування (значення)",
+                            "Різні ID ключів",
+                            "Різні ID груп",
+                            "Проблема з антеною"
+                        ],
+                        correct: [0],
+                        multi: false,
+                        hard: true,
+                        explanation: "Якщо ключі шифрування різні — звук буде нерозбірливий. Якщо ID різні — звуку не буде взагалі."
+                    },
+                    {
+                        text: "При натисканні тангенти радіостанція перезавантажується. Які дії найправильніші?",
+                        options: [
+                            "Перепрограмувати радіостанцію",
+                            "Замінити акумулятор і зменшити потужність",
+                            "Перевірити антену",
+                            "Оновити прошивку"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "З таблиці помилок: перезавантаження при натисканні — проблема з АКБ. Рекомендація: замінити акумулятор і встановити низьку потужність."
+                    },
+                    {
+                        text: "Виберіть всі правильні твердження про ключ RAS: (можна обрати кілька)",
+                        options: [
+                            "Використовується тільки на каналах з ретранслятором",
+                            "На ретранслятор можна записати тільки 1 ключ",
+                            "На портативну радіостанцію можна записати до 16 ключів",
+                            "Ключ RAS зчитується через CPS",
+                            "Довжина ключа може бути 30 символів"
+                        ],
+                        correct: [0, 1, 2],
+                        multi: true,
+                        hard: true,
+                        explanation: "RAS: тільки на каналах з ретранслятором, 1 на ретранслятор, до 16 на портативну. Не зчитується через CPS, довжина 6-24 символи."
+                    },
+                    {
+                        text: "Які символи МОЖНА використовувати в ключі RAS? (можна обрати кілька)",
+                        options: [
+                            "_ (нижнє підкреслення)",
+                            "- (дефіс)",
+                            "# (решітка)",
+                            "$ (долар)",
+                            "@ (собачка)",
+                            "% (відсоток)",
+                            "? (знак питання)"
+                        ],
+                        correct: [0, 1, 2, 3],
+                        multi: true,
+                        hard: true,
+                        explanation: "Дозволені: літери, цифри, _ - # $. Всі інші спецсимволи — заборонені."
+                    },
+                    {
+                        text: "Скільки ключів шифрування можна записати в радіостанцію MOTOTRBO?",
+                        options: ["8", "16", "32", "64"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "До 16 ключів шифрування."
+                    },
+                    {
+                        text: "Яка максимальна довжина ключа RAS?",
+                        options: ["16 символів", "24 символи", "32 символи", "64 символи"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Довжина ключа RAS: 6-24 символи."
+                    },
+                    {
+                        text: "Що таке Read в CPS і які дані він зчитує?",
+                        options: [
+                            "Зчитує всю інформацію, включаючи ключі",
+                            "Зчитує всю інформацію, крім ключів шифрування та RAS",
+                            "Зчитує тільки ключі шифрування",
+                            "Зчитує тільки частотні налаштування"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Read зчитує кодплаг, але ключі шифрування та RAS не зчитуються з міркувань безпеки."
+                    },
+                    {
+                        text: "Що таке Clone в CPS?",
+                        options: [
+                            "Створення резервної копії",
+                            "Запис кодплагу на іншу радіостанцію з автоматичною заміною ID",
+                            "Оновлення мікропрограми",
+                            "Тестування радіостанції"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Clone — клонування на іншу радіостанцію з автоматичною заміною ID та імені."
+                    },
+                    {
+                        text: "Індикатор RxA на ретрансляторі SLR5500 горить неперервно зеленим. Що це означає?",
+                        options: [
+                            "Передача по слоту 1",
+                            "Прийом по слоту 1",
+                            "Прийом по слоту 2",
+                            "Ретранслятор заблокований"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "RxA — прийом по слоту 1, RxB — прийом по слоту 2."
+                    },
+                    {
+                        text: "Індикатор Disabled на DR3000 червоний. Ваші дії?",
+                        options: [
+                            "Перевірити живлення",
+                            "Розблокувати ретранслятор",
+                            "Перезавантажити",
+                            "Замінити акумулятор"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Disabled — ретранслятор заблоковано. Потрібно розблокувати."
+                    },
+                    {
+                        text: "Яка потужність радіостанції DM4600 в діапазоні UHF?",
+                        options: ["54/20 Вт", "40/25 Вт", "45/20 Вт", "50/25 Вт"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "DM4600: VHF 54/20 Вт, UHF 40/25 Вт."
+                    },
+                    {
+                        text: "Яка дальність зв'язку між ретранслятором та автомобільною радіостанцією?",
+                        options: ["до 20 км", "до 30 км", "до 40 км", "до 50 км"],
+                        correct: [2],
+                        multi: false,
+                        hard: false,
+                        explanation: "DR-DM: до 40 км."
+                    },
+                    {
+                        text: "Для чого потрібен сплітер в комплекті ретранслятора?",
+                        options: [
+                            "Для розділення частот Tx/Rx",
+                            "Для підключення кількох антен до одного ретранслятора",
+                            "Для захисту від грози",
+                            "Для підсилення сигналу"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Сплітер призначений для підключення декількох антен до одного ретранслятора."
+                    },
+                    {
+                        text: "Для чого потрібен дуплексер?",
+                        options: [
+                            "Для підключення кількох антен",
+                            "Для розділення частот передачі та прийому на одну антену",
+                            "Для захисту від грози",
+                            "Для підсилення сигналу"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Дуплексер дозволяє використовувати одну антену для передачі і прийому, розділяючи частоти."
+                    },
+                    {
+                        text: "Які параметри ОБОВ'ЯЗКОВО мають співпадати для роботи в одній цифровій групі через ретранслятор? (можна обрати кілька)",
+                        options: [
+                            "Частота передачі",
+                            "Частота прийому",
+                            "Колірний код",
+                            "ID ключа шифрування",
+                            "Значення ключа шифрування",
+                            "ID групового виклику",
+                            "Тайм-слот"
+                        ],
+                        correct: [0, 1, 2, 3, 4, 5, 6],
+                        multi: true,
+                        hard: true,
+                        explanation: "Всі параметри мають співпадати: частоти, колірний код, ключі (ID та значення), ID групи, тайм-слот. Це необхідно для коректної роботи в групі."
+                    },
+                    {
+                        text: "При натисканні тангенти чуєте гудок після паузи. Яка послідовність дій для усунення проблеми?",
+                        options: [
+                            "Перевірити чи запрограмований канал",
+                            "Перевірити зв'язок з ретранслятором (RAS, колір, частоти)",
+                            "Замінити акумулятор",
+                            "Перевірити антену"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Гудок після паузи — проблеми з ретранслятором. Потрібно перевірити ключ RAS, колірний код, частоти."
+                    },
+                    {
+                        text: "Індикатор зарядки АКБ блимає червоним. Що це означає і що робити?",
+                        options: [
+                            "Зарядка завершена, можна використовувати",
+                            "Помилка зарядки, перевірити акумулятор",
+                            "Акумулятор заряджений на 90%, зачекати",
+                            "Йде зарядка, нічого не робити"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Червоне блимання — несправність або проблема з акумулятором. Потрібно перевірити акумулятор."
+                    },
+                    {
+                        text: "Індикатор зарядки АКБ блимає зеленим. Що це означає?",
+                        options: [
+                            "Повний заряд",
+                            "90% заряду",
+                            "50% заряду",
+                            "Помилка"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Зелене блимання — 90% заряду. Неперервний зелений — повний заряд."
+                    },
+                    {
+                        text: "Яка максимальна кількість ретрансляторів в мережі IP Site Connect?",
+                        options: ["8", "15", "16", "32"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Технічне обмеження — 15 ретрансляторів в одній мережі."
+                    },
+                    {
+                        text: "Що таке IP Site Connect?",
+                        options: [
+                            "Технологія для з'єднання ретрансляторів через IP-мережу",
+                            "Автоматичний перехід між ретрансляторами",
+                            "Режим шифрування",
+                            "Тип антени"
+                        ],
+                        correct: [0],
+                        multi: false,
+                        hard: false,
+                        explanation: "IP Site Connect об'єднує ретранслятори через IP-мережу для розширення зони покриття."
+                    },
+                    {
+                        text: "Що таке роумінг в MOTOTRBO?",
+                        options: [
+                            "Автоматичний перехід між ретрансляторами",
+                            "З'єднання ретрансляторів через IP",
+                            "Сканування каналів",
+                            "Прямий зв'язок"
+                        ],
+                        correct: [0],
+                        multi: false,
+                        hard: false,
+                        explanation: "Роумінг — автоматичний перехід між ретрансляторами при виході із зони покриття."
+                    },
+                    {
+                        text: "Виберіть правильне твердження про Site Lock:",
+                        options: [
+                            "Дозволяє автоматично перемикатися між ретрансляторами",
+                            "Фіксує радіостанцію на конкретному ретрансляторі",
+                            "Блокує ретранслятор",
+                            "Вимикає сканування"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Site Lock — примусове утримання на конкретному ретрансляторі, навіть якщо є доступні інші."
+                    },
+                    {
+                        text: "Що таке Talk Around?",
+                        options: [
+                            "Робота через два ретранслятори",
+                            "Прямий зв'язок без ретранслятора",
+                            "Режим підвищеної потужності",
+                            "Режим шифрування"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Talk Around — прямий зв'язок між радіостанціями, без ретранслятора (частоти Tx та Rx однакові)."
+                    },
+                    {
+                        text: "Яка кількість тайм-слотів на одній частоті в цифровому режимі TDMA?",
+                        options: ["1", "2", "4", "8"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "У цифровому режимі TDMA використовується 2 тайм-слоти на одній частоті."
+                    },
+                    {
+                        text: "Скільки каналів можна запрограмувати в одну зону радіостанції DP4400?",
+                        options: ["8", "16", "32", "64"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "В одній зоні — максимум 16 каналів. Всього 2 зони = 32 канали."
+                    },
+                    {
+                        text: "Які способи розповсюдження радіохвиль?",
+                        options: [
+                            "Земна та іоносферна",
+                            "Пряма та відбита",
+                            "Цифрова та аналогова",
+                            "Модульована та демодульована"
+                        ],
+                        correct: [0],
+                        multi: false,
+                        hard: false,
+                        explanation: "Основні способи: земна (поверхнева) та іоносферна (просторова)."
+                    },
+                    {
+                        text: "Для чого призначений пароль кодплагу?",
+                        options: [
+                            "Захист від увімкнення радіостанції",
+                            "Захист файлу конфігурації від несанкціонованого доступу",
+                            "Шифрування радіопередач",
+                            "Доступ до ретранслятора"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Пароль кодплагу захищає файл конфігурації від несанкціонованого зчитування/зміни."
+                    },
+                    {
+                        text: "Яка напруга живлення портативних радіостанцій DP4400/DP4800?",
+                        options: ["5 В", "7,5 В", "12 В", "13,5 В"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Портативні — 7,5 В. Автомобільні — 13,5 В."
+                    },
+                    {
+                        text: "Який радіозасіб має захист IP57 (можна тимчасово занурювати у воду)?",
+                        options: ["DR3000", "DP4800", "DM4600", "SLR5500"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "DP4800 має захист IP57 (IP68) — тимчасове занурення до 1 м."
+                    },
+                    {
+                        text: "Що таке кодплаг?",
+                        options: [
+                            "Файл конфігурації радіостанції",
+                            "Ключ шифрування",
+                            "Програма для програмування",
+                            "Тип антени"
+                        ],
+                        correct: [0],
+                        multi: false,
+                        hard: false,
+                        explanation: "Codeplug — це файл конфігурації (прошивка) радіостанції."
+                    },
+                    {
+                        text: "Склад батальйонного комплекту MOTOTRBO?",
+                        options: [
+                            "DM4600-2, DP4800-10, DP4400-40, SLR5500-2",
+                            "DM4600-2, DP4800-10, DP4400-40, SLR5500-1",
+                            "DM4600-10, DP4800-20, DP4400-40, SLR5500-1",
+                            "DM4600-2, DP4400-10, DP4800-40, SLR5500-1"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "DM4600-2, DP4800-10, DP4400-40, SLR5500-1."
+                    },
+                    {
+                        text: "Кількість програмованих кнопок на DP4800?",
+                        options: ["4", "5", "6", "7"],
+                        correct: [2],
+                        multi: false,
+                        hard: false,
+                        explanation: "DP4800 має 4 програмовані кнопки, але з додатковими функціями часто називають 6."
+                    },
+                    {
+                        text: "Які типи викликів підтримуються в MOTOTRBO? (можна обрати кілька)",
+                        options: [
+                            "Приватні (індивідуальні)",
+                            "Групові",
+                            "Загальні (всім)",
+                            "Екстрені",
+                            "Пріоритетні"
+                        ],
+                        correct: [0, 1, 2],
+                        multi: true,
+                        hard: false,
+                        explanation: "MOTOTRBO підтримує приватні, групові та загальні виклики."
+                    },
+                    {
+                        text: "Який алгоритм шифрування використовується в MOTOTRBO як основний?",
+                        options: ["AES-128", "AES-256", "ARC4", "DES"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Основний алгоритм — AES-256 (за наявності ліцензії)."
+                    },
+                    // ДОДАТКОВІ СКЛАДНІ ПИТАННЯ
+                    {
+                        text: "У вас мережа з 5 ретрансляторів, об'єднаних через IP Site Connect. Один ретранслятор вийшов з ладу. Що станеться з абонентами, які були в його зоні?",
+                        options: [
+                            "Втратять зв'язок повністю",
+                            "Автоматично перейдуть на інший ретранслятор (роумінг)",
+                            "Перейдуть в режим Talk Around",
+                            "Почують сигнал помилки"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Якщо налаштований роумінг, радіостанції автоматично перейдуть на інший доступний ретранслятор."
+                    },
+                    {
+                        text: "Ви запрограмували радіостанцію з ключем шифрування AES-256. Інша радіостанція має такий самий ключ, але інший ID ключа. Як це вплине на зв'язок?",
+                        options: [
+                            "Зв'язок буде нормальним",
+                            "Звуку не буде, хоча передача проходить",
+                            "Звук буде нерозбірливим",
+                            "Радіостанції не з'єднаються"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "ID ключа має співпадати! Якщо ID різний — звуку не буде, хоча передача проходить."
+                    },
+                    {
+                        text: "При програмуванні каналу ви не вказали ім'я контакту (Tx Contact Name). Що відбудеться при спробі передачі?",
+                        options: [
+                            "Гудок після паузи",
+                            "Гудок одразу",
+                            "Нічого, передача піде в ефір",
+                            "Радіостанція перейде в режим сканування"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Якщо не вказано ім'я контакту — при натисканні тангенти одразу чути гудок."
+                    },
+                    {
+                        text: "Чому при роботі через ретранслятор частоти передачі та прийому різні?",
+                        options: [
+                            "Для збільшення дальності",
+                            "Щоб уникнути самозбудження ретранслятора",
+                            "Для шифрування",
+                            "Для роумінгу"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: true,
+                        explanation: "Різні частоти потрібні, щоб ретранслятор не глушив сам себе (уникнення зворотного зв'язку)."
+                    },
+                    {
+                        text: "Яка мінімальна довжина ключа RAS?",
+                        options: ["4 символи", "6 символів", "8 символів", "10 символів"],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "Довжина ключа RAS: від 6 до 24 символів."
+                    },
+                    {
+                        text: "Що означає індикатор TxA на ретрансляторі SLR5500?",
+                        options: [
+                            "Прийом по слоту 1",
+                            "Передача по слоту 1",
+                            "Прийом по слоту 2",
+                            "Передача по слоту 2"
+                        ],
+                        correct: [1],
+                        multi: false,
+                        hard: false,
+                        explanation: "TxA — передача по слоту 1, TxB — передача по слоту 2."
+                    },
+                    {
+                        text: "Якщо при натисканні тангенти чуєте гудок після паузи, які параметри потрібно перевірити в першу чергу? (можна обрати кілька)",
+                        options: [
+                            "Ключ RAS",
+                            "Колірний код",
+                            "Частоти передачі/прийому",
+                            "ID ключа шифрування",
+                            "Ім'я контакту"
+                        ],
+                        correct: [0, 1, 2],
+                        multi: true,
+                        hard: true,
+                        explanation: "Гудок після паузи — проблеми з ретранслятором. Перевіряємо RAS, колірний код, частоти."
+                    },
+                    {
+                        text: "Скільки ключів RAS можна записати в портативну радіостанцію?",
+                        options: ["1", "8", "16", "32"],
+                        correct: [2],
+                        multi: false,
+                        hard: false,
+                        explanation: "На портативну радіостанцію можна записати до 16 ключів RAS."
+                    },
+                    {
+                        text: "Скільки ключів RAS можна записати в ретранслятор?",
+                        options: ["1", "8", "16", "32"],
+                        correct: [0],
+                        multi: false,
+                        hard: false,
+                        explanation: "На ретранслятор — тільки 1 ключ RAS."
+                    },
+                    {
+                        text: "Виберіть правильне твердження про колірний код:",
+                        options: [
+                            "Має бути однаковим для всіх в мережі",
+                            "Може бути різним для різних абонентів",
+                            "Використовується тільки в аналоговому режимі",
+                            "Визначає частоту передачі"
+                        ],
+                        correct: [0],
+                        multi: false,
+                        hard: false,
+                        explanation: "Колірний код має бути однаковим для всіх пристроїв в одній мережі."
+                    }
+                ]
+            },
+            computed: {
+                current() { return this.questions[this.currentIdx]; },
+                total() { return this.questions.length; },
+                isLast() { return this.currentIdx === this.total - 1; },
+                progress() { return ((this.currentIdx + 1) / this.total) * 100; },
+                hasSelection() { return this.selected.length > 0; },
+                score() {
+                    let correct = 0;
+                    for (let i = 0; i < this.questions.length; i++) {
+                        if (this.isAnswerCorrect(i)) correct++;
+                    }
+                    return correct;
+                },
+                scorePercent() { return Math.round((this.score / this.total) * 100); }
+            },
+            methods: {
+                toggle(idx) {
+                    const q = this.current;
+                    if (q.multi) {
+                        const i = this.selected.indexOf(idx);
+                        if (i === -1) this.selected.push(idx);
+                        else this.selected.splice(i, 1);
+                    } else {
+                        this.selected = this.selected[0] === idx ? [] : [idx];
+                    }
+                },
+                isSelected(idx) { return this.selected.includes(idx); },
+                next() {
+                    if (this.hasSelection) {
+                        this.$set(this.answers, this.currentIdx, [...this.selected]);
+                        if (this.currentIdx < this.total - 1) {
+                            this.currentIdx++;
+                            this.selected = this.answers[this.currentIdx] ? [...this.answers[this.currentIdx]] : [];
+                        }
+                    }
+                },
+                prev() {
+                    if (this.currentIdx > 0) {
+                        this.$set(this.answers, this.currentIdx, [...this.selected]);
+                        this.currentIdx--;
+                        this.selected = this.answers[this.currentIdx] ? [...this.answers[this.currentIdx]] : [];
+                    }
+                },
+                finish() {
+                    if (this.hasSelection) this.$set(this.answers, this.currentIdx, [...this.selected]);
+                    this.finished = true;
+                },
+                reset() {
+                    this.currentIdx = 0;
+                    this.selected = [];
+                    this.answers = [];
+                    this.finished = false;
+                    this.showReview = false;
+                },
+                isAnswerCorrect(idx) {
+                    const q = this.questions[idx];
+                    const ans = this.answers[idx] || [];
+                    if (!q.multi) return ans.length === 1 && ans[0] === q.correct[0];
+                    const correctSorted = [...q.correct].sort();
+                    const ansSorted = [...ans].sort();
+                    if (ansSorted.length !== correctSorted.length) return false;
+                    for (let i = 0; i < ansSorted.length; i++) {
+                        if (ansSorted[i] !== correctSorted[i]) return false;
+                    }
+                    return true;
+                },
+                formatUserAnswer(idx) {
+                    const q = this.questions[idx];
+                    const ans = this.answers[idx] || [];
+                    if (ans.length === 0) return '❌ не обрано';
+                    return ans.map(i => this.letters[i]).join(', ');
+                },
+                formatCorrectAnswer(q) {
+                    if (!q.multi) return this.letters[q.correct[0]];
+                    return q.correct.map(i => this.letters[i]).join(', ');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
